@@ -9,12 +9,14 @@ import TacticalMap from './components/TacticalMap';
 import TriagePipeline from './components/TriagePipeline';
 import RealTimeMetrics from './components/RealTimeMetrics';
 import ControlPanel from './components/ControlPanel';
+import Login from './components/Login';
 import { Shield, Clock, Wifi, WifiOff, Activity } from 'lucide-react';
 
 export default function App() {
   const { connected, paused, incidents, volunteers } = useSocket();
   const [clock, setClock] = useState(new Date());
   const [activeTab, setActiveTab] = useState('overview');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,8 +30,12 @@ export default function App() {
   const activeIncidents = incidents.filter((i) => i.status !== 'RESOLVED').length;
   const deployedUnits = volunteers.filter((v) => v.status !== 'Available').length;
 
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
-    <div className="h-screen flex flex-col bg-tactical-black font-sans text-white overflow-hidden">
+    <div className="h-screen flex flex-col bg-tactical-black font-sans text-white overflow-hidden animate-fade-in">
       {/* ─── Header Bar ──────────────────────────────────────────────── */}
       <header className="flex-shrink-0 flex flex-col border-b border-slate-800/50 bg-zinc-950/90 backdrop-blur-xl z-50">
         <div className="flex items-center justify-between px-5 py-2.5 border-b border-slate-800/50">
