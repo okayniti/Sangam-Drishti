@@ -5,7 +5,7 @@
 
 ---
 
-## 🚀 The Core Problem & Our Innovative Solutions
+## 🚀 The Core Problem & proposed Innovative Solutions
 
 Managing the largest human gathering on earth requires systems that look beyond generic CRUD applications and instead function as elite, real-time tactical engines. **SangamDrishti** provides three standout pillars built specifically for Mahakumbh operational logic:
 
@@ -23,7 +23,7 @@ A fluid Kanban matrix that breaks alerts into actionable states:
 
 ---
 
-## 🔐 Demo Access (For Hackathon Judges)
+## 🔐 Demo Access
 When you access the platform, you will be greeted by our premium Command Center gateway. Use the following credentials to access the live dashboard:
 - **Email:** `admin@sangamdrishti.in`
 - **Password:** `Mahakumbh2028`
@@ -88,7 +88,7 @@ Open your browser and navigate to the tactical system UI:
 
 ## 🌍 Live Global Production Deployments
 
-For the hackathon review panel, the system is fully deployed and actively running live telemetry.
+For the hackathon review panel, the system is fully deployed and actively running live telemetry. Frontend hosting: Vercel; Backend hosting: Render
 
 - **Frontend Hosting Interface:** [https://sangam-drishti.vercel.app/]
 - **Live WebSocket Backend Engine:** [https://sangam-drishti-backend.onrender.com/] **"WebSocket background data pipeline stream only, do not open directly in browser"**
