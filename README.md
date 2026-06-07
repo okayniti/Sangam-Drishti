@@ -1,7 +1,7 @@
 # SangamDrishti: Mahakumbh 2028 Integrated Command & Control Center (ICCC)
 
 > **A real-time, data-driven crowd telemetry and tactical emergency personnel dispatch platform designed for the extreme operational scale of Prayagraj 2028.**
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/633f3658-7162-4254-829c-b596dc31e278" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/3f1bd14b-5b48-43de-8318-6e94d2cd19d5" />
 
 ---
 
