@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Mail, Lock, ArrowRight, ShieldAlert, Key } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Info } from 'lucide-react';
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isShaking, setIsShaking] = useState(false);
 
@@ -26,165 +27,186 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="flex h-screen w-full bg-zinc-950 font-sans overflow-hidden">
+    <div className="flex h-screen w-full bg-slate-100/50 font-sans overflow-hidden">
       
-      {/* ─── LEFT PANEL: Cultural Graphic Canvas (Hidden on mobile) ─── */}
-      <div className="hidden md:flex flex-col w-[40%] relative bg-gradient-to-br from-slate-900 to-zinc-950 border-r border-slate-800/50 p-10 justify-between">
+      {/* ─── LEFT PANEL: Cultural Vector Art Canvas ─── */}
+      <div className="hidden md:flex md:w-[42%] bg-slate-50/50 relative flex-col border-r border-slate-200/60 p-10 justify-center items-center overflow-hidden">
         
-        {/* Subtle Decorative Background Lines */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#gridPattern)" />
+        {/* Minimal Vector Artwork - Temple, Flags, Kalash, Sangam River */}
+        <div className="relative w-full max-w-md aspect-square flex items-center justify-center">
+          <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-sm" fill="none" xmlns="http://www.w3.org/2000/svg">
+            
+            {/* Background Decorative Stars/Diamonds */}
+            <path d="M 60 80 L 65 70 L 70 80 L 65 90 Z" fill="#cbd5e1" />
+            <path d="M 320 120 L 325 110 L 330 120 L 325 130 Z" fill="#cbd5e1" />
+            <circle cx="80" cy="220" r="3" fill="#e2e8f0" />
+            <circle cx="340" cy="260" r="4" fill="#e2e8f0" />
+
+            {/* Central Temple Spires (Shikhars) */}
+            {/* Left smaller spire */}
+            <path d="M 120 280 L 150 160 L 180 280 Z" stroke="#64748b" strokeWidth="2" strokeLinejoin="round"/>
+            <path d="M 120 280 L 180 280" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="130" y1="240" x2="170" y2="240" stroke="#94a3b8" strokeWidth="1" />
+            <line x1="140" y1="200" x2="160" y2="200" stroke="#94a3b8" strokeWidth="1" />
+            <circle cx="150" cy="160" r="4" fill="#64748b" />
+            {/* Flag */}
+            <path d="M 150 160 L 150 130 L 175 145 Z" fill="#f97316" />
+
+            {/* Main Center Spire */}
+            <path d="M 160 280 L 200 80 L 240 280 Z" stroke="#475569" strokeWidth="2.5" strokeLinejoin="round"/>
+            <path d="M 160 280 L 240 280" stroke="#475569" strokeWidth="2.5" strokeLinecap="round"/>
+            <line x1="175" y1="230" x2="225" y2="230" stroke="#94a3b8" strokeWidth="1.5" />
+            <line x1="185" y1="180" x2="215" y2="180" stroke="#94a3b8" strokeWidth="1.5" />
+            <line x1="193" y1="130" x2="207" y2="130" stroke="#94a3b8" strokeWidth="1.5" />
+            <circle cx="200" cy="80" r="5" fill="#475569" />
+            {/* Flag */}
+            <path d="M 200 80 L 200 40 L 235 60 L 210 65 L 235 75 Z" fill="#ea580c" />
+
+            {/* Right smaller spire */}
+            <path d="M 220 280 L 250 170 L 280 280 Z" stroke="#64748b" strokeWidth="2" strokeLinejoin="round"/>
+            <path d="M 220 280 L 280 280" stroke="#64748b" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="230" y1="240" x2="270" y2="240" stroke="#94a3b8" strokeWidth="1" />
+            <line x1="240" y1="205" x2="260" y2="205" stroke="#94a3b8" strokeWidth="1" />
+            <circle cx="250" cy="170" r="3" fill="#64748b" />
+            {/* Flag */}
+            <path d="M 250 170 L 250 145 L 270 157 Z" fill="#f97316" />
+
+            {/* Kalash with Coconut and Swastik (bottom rightish overlay) */}
+            <g transform="translate(260, 240)">
+              {/* Coconut Leaves */}
+              <path d="M 20 15 Q 5 5, 0 15 Q 5 20, 20 15" fill="#22c55e" opacity="0.8"/>
+              <path d="M 20 15 Q 35 5, 40 15 Q 35 20, 20 15" fill="#22c55e" opacity="0.8"/>
+              <path d="M 20 15 Q 20 0, 15 -5 Q 25 0, 20 15" fill="#16a34a" />
+              {/* Pot */}
+              <path d="M 10 15 Q 0 40, 20 40 Q 40 40, 30 15 Z" stroke="#b45309" strokeWidth="2" fill="#fffbeb" />
+              {/* Swastik */}
+              <path d="M 15 22 L 20 22 L 20 32 M 20 22 L 20 17 L 25 17 M 15 27 L 15 22 M 20 27 L 25 27 L 25 32" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round"/>
+            </g>
+
+            {/* Flowing Geometric Dual-Lines (Sangam River Currents) */}
+            <path d="M 0 310 Q 100 280, 200 320 T 400 310" stroke="#3b82f6" strokeWidth="3" opacity="0.6" strokeLinecap="round" />
+            <path d="M 0 330 Q 100 300, 200 340 T 400 330" stroke="#0ea5e9" strokeWidth="2" opacity="0.5" strokeLinecap="round" />
+            <path d="M 0 350 Q 100 320, 200 360 T 400 350" stroke="#60a5fa" strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
+            <path d="M 0 370 Q 100 340, 200 380 T 400 370" stroke="#93c5fd" strokeWidth="1" opacity="0.3" strokeLinecap="round" />
+
           </svg>
-        </div>
-
-        <div className="z-10 mt-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-orange-500/10 rounded-lg">
-              <ShieldAlert className="w-8 h-8 text-orange-500" />
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">
-              SangamDrishti
-            </h1>
-          </div>
-          <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
-            Mahakumbh 2028 Integrated Command & Control Center. Advanced crowd telemetry, tactical dispatch, and situational awareness grid.
-          </p>
-        </div>
-
-        {/* Minimal Vector Graphics */}
-        <div className="z-10 flex-1 flex items-center justify-center relative">
-          <div className="relative w-64 h-64">
-            {/* Minimal River Flow / Sangam Curves */}
-            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full text-indigo-500/20 stroke-current drop-shadow-lg" fill="none" strokeWidth="1.5">
-              <path d="M 0 50 Q 25 20, 50 50 T 100 50" />
-              <path d="M 0 60 Q 25 30, 50 60 T 100 60" />
-              <path d="M 0 70 Q 25 40, 50 70 T 100 70" />
-            </svg>
-            {/* Minimal Temple Spire Outline */}
-            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full text-orange-500/30 stroke-current drop-shadow-md" fill="none" strokeWidth="1">
-              <polygon points="50,10 30,80 70,80" />
-              <line x1="50" y1="10" x2="50" y2="80" />
-              <circle cx="50" cy="10" r="2" fill="currentColor" />
-              <rect x="45" y="80" width="10" height="20" />
-            </svg>
-          </div>
-        </div>
-
-        <div className="z-10 text-xs text-slate-600 font-mono tracking-widest uppercase">
-          Prayagraj 2028 Protocol | System Secure
         </div>
       </div>
 
-      {/* ─── RIGHT PANEL: Command Center Overlay ─── */}
-      <div className="flex-1 relative flex items-center justify-center p-6 bg-zinc-950">
+      {/* ─── RIGHT PANEL: Login Interface ─── */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-slate-50 relative">
         
-        {/* Blurred Dashboard Backdrop */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-zinc-950 to-zinc-950"></div>
+        {/* Branding Block */}
+        <div className="absolute top-8 left-8 flex items-center gap-3">
+          <div className="flex flex-col items-center">
+             {/* Logo Icon */}
+             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Spire */}
+                <path d="M 16 4 L 24 18 L 8 18 Z" stroke="#ea580c" strokeWidth="2" strokeLinejoin="round" fill="#fff7ed" />
+                <path d="M 16 4 L 16 18" stroke="#ea580c" strokeWidth="2" />
+                {/* Waves */}
+                <path d="M 4 22 Q 10 18, 16 22 T 28 22" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" />
+                <path d="M 4 26 Q 10 22, 16 26 T 28 26" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" />
+             </svg>
+          </div>
+          <div className="flex flex-col justify-center">
+            <span className="text-xl font-bold text-slate-800 leading-none">SangamDrishti</span>
+            <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mt-0.5">ICCC</span>
+          </div>
         </div>
 
-        {/* Floating Login Card */}
-        <div className={`relative w-full max-w-md bg-zinc-900/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl p-8 ${isShaking ? 'animate-[shake_0.5s_ease-in-out]' : ''}`}>
+        <div className="w-full max-w-sm flex flex-col">
           
-          <div className="mb-8">
-            <h2 className="text-3xl font-extrabold text-white mb-2">Welcome back</h2>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              Sign in to manage sevadars, crowd alerts, and incidents from your integrated command center.
-            </p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-4 w-4 text-slate-500" />
-                </div>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-zinc-950/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all"
-                  placeholder="admin@sangamdrishti.in"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-4 w-4 text-slate-500" />
-                </div>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-zinc-950/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
+          {/* Floating Login Card */}
+          <div className={`bg-white rounded-2xl shadow-xl border border-slate-100 p-8 w-full ${isShaking ? 'animate-[shake_0.5s_ease-in-out]' : ''}`}>
+            
+            <div className="mb-6 text-center">
+              <h2 className="text-2xl font-bold text-slate-800">Login Card</h2>
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2.5 flex items-start gap-2">
-                <ShieldAlert className="w-4 h-4 text-red-400 mt-0.5" />
-                <p className="text-xs text-red-400 font-medium">{error}</p>
+              <div className="mb-4 bg-red-50 text-red-600 text-xs font-medium py-2 px-3 rounded border border-red-100 text-center">
+                {error}
               </div>
             )}
 
-            <button
-              type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-medium py-2.5 rounded-lg transition-all shadow-lg shadow-orange-900/20"
-            >
-              Sign In <ArrowRight className="w-4 h-4" />
-            </button>
-          </form>
-
-          <div className="my-6 flex items-center">
-            <div className="flex-1 border-t border-slate-700/50"></div>
-            <span className="px-3 text-xs text-slate-500 font-semibold tracking-wider">OR</span>
-            <div className="flex-1 border-t border-slate-700/50"></div>
-          </div>
-
-          {/* Demo Info Block */}
-          <div className="bg-sky-950/30 border border-sky-900/50 rounded-xl p-4">
-            <div className="flex items-start justify-between mb-3">
+            <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <h3 className="text-sm font-semibold text-sky-400 mb-1 flex items-center gap-1.5">
-                  <Key className="w-4 h-4" /> Reviewer Access
-                </h3>
-                <p className="text-xs text-slate-400 font-mono">
-                  Email: admin@sangamdrishti.in<br/>
-                  Pass: Mahakumbh2028
-                </p>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  Email:
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-4 w-4 text-slate-400" />
+                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
               </div>
-            </div>
-            <button
-              type="button"
-              onClick={handleDemoFill}
-              className="w-full bg-sky-900/40 hover:bg-sky-800/50 text-sky-300 border border-sky-800/50 text-xs font-medium py-2 rounded-lg transition-all"
-            >
-              Try Demo Credentials
-            </button>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  Password:
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-4 w-4 text-slate-400" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded-lg w-full flex items-center justify-center space-x-2 shadow-md transition-all"
+                >
+                  <span>Orange Sign In</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </form>
           </div>
 
+          {/* Bottom Demo Account Accent Container */}
+          <div 
+            onClick={handleDemoFill}
+            className="cursor-pointer bg-sky-50 border border-sky-200 text-sky-900 rounded-xl p-4 mt-4 transition-all hover:bg-sky-100 hover:border-sky-300 shadow-sm flex flex-col"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <Info className="w-4 h-4 text-sky-600" />
+              <h3 className="text-sm font-semibold text-sky-800">Demo credentials</h3>
+            </div>
+            <div className="text-xs font-mono text-sky-700 space-y-1 ml-6">
+              <div>Email: admin@sangamdrishti.in</div>
+              <div>Password: Mahakumbh2028</div>
+            </div>
+          </div>
+          
         </div>
       </div>
       
-      {/* Shake animation keyframes via style tag for simplicity without modifying tailwind config */}
+      {/* Shake animation keyframes */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
