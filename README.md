@@ -22,6 +22,15 @@ A fluid Kanban matrix that breaks alerts into actionable states:
 
 ---
 
+## 🔐 Demo Access (For Hackathon Judges)
+When you access the platform, you will be greeted by our premium Command Center gateway. Use the following credentials to access the live dashboard:
+- **Email:** `admin@sangamdrishti.in`
+- **Password:** `Mahakumbh2028`
+
+*(You can also use the "Demo credentials" auto-fill button at the bottom of the login screen.)*
+
+---
+
 ## 🏗️ Architecture & Tech Stack
 
 SangamDrishti is constructed as a highly modular full-stack application within a mono-repo architecture. It relies on in-memory state arrays with automated ID indexing to act as an instant-bootstrap database—meaning zero external database connection strings are required for rapid hackathon review.

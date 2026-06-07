@@ -1,11 +1,4 @@
-// ═══════════════════════════════════════════════════════════════════════════════
-// TACTICAL MAP — Custom SVG visualization of the festival ground
-// Renders crowd zones as density-shaded bounding boxes, volunteers as circular
-// nodes with initials, and incidents as pulsing hazard markers.
-// Click-on-incident triggers proximity dispatch panel with nearest 3 volunteers.
-// ═══════════════════════════════════════════════════════════════════════════════
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useSocket } from '../context/SocketContext';
 import { MapPin, X, Navigation, AlertTriangle, Radio } from 'lucide-react';
 
@@ -13,14 +6,14 @@ function calculateDistance(x1, y1, x2, y2) {
   return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 }
 
-function getZoneColors(ratio) {
+function getZoneColors(ratio, isDarkMode) {
   if (ratio > 0.85) {
-    return { fill: 'rgba(239,68,68,0.18)', stroke: '#ef4444', text: '#fca5a5' };
+    return { fill: isDarkMode ? 'rgba(239,68,68,0.18)' : 'rgba(239,68,68,0.1)', stroke: '#ef4444', text: isDarkMode ? '#fca5a5' : '#b91c1c' };
   }
   if (ratio > 0.5) {
-    return { fill: 'rgba(245,158,11,0.12)', stroke: '#f59e0b', text: '#fcd34d' };
+    return { fill: isDarkMode ? 'rgba(245,158,11,0.12)' : 'rgba(245,158,11,0.1)', stroke: '#f59e0b', text: isDarkMode ? '#fcd34d' : '#b45309' };
   }
-  return { fill: 'rgba(16,185,129,0.10)', stroke: '#10b981', text: '#6ee7b7' };
+  return { fill: isDarkMode ? 'rgba(16,185,129,0.10)' : 'rgba(16,185,129,0.1)', stroke: '#10b981', text: isDarkMode ? '#6ee7b7' : '#047857' };
 }
 
 function getVolunteerColor(status) {
@@ -44,6 +37,17 @@ function getIncidentColor(priority) {
 export default function TacticalMap() {
   const { crowdZones, volunteers, incidents, dispatch } = useSocket();
   const [selectedIncident, setSelectedIncident] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // To properly catch the class change from App.jsx, we can use an observer
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    setIsDarkMode(document.documentElement.classList.contains('dark'));
+    return () => observer.disconnect();
+  }, []);
 
   const activeIncidents = incidents.filter((i) => i.status !== 'RESOLVED');
 
@@ -73,19 +77,19 @@ export default function TacticalMap() {
   };
 
   return (
-    <div className="glass-card flex flex-col relative overflow-hidden">
+    <div className="glass-card flex flex-col relative overflow-hidden transition-colors">
       {/* Header */}
-      <div className="flex-shrink-0 flex items-center justify-between px-4 py-2 border-b border-slate-800/50">
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-2 border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-indigo-400" />
-          <h2 className="text-xs font-bold text-slate-200 tracking-widest uppercase">
+          <MapPin className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+          <h2 className="text-xs font-bold text-slate-800 dark:text-slate-100 tracking-widest uppercase">
             Tactical Map
           </h2>
-          <span className="text-[9px] font-mono text-slate-600 bg-slate-800/40 px-1.5 py-0.5 rounded">
+          <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/40 px-1.5 py-0.5 rounded">
             LIVE
           </span>
         </div>
-        <div className="flex items-center gap-4 text-[10px] text-slate-500 font-medium">
+        <div className="flex items-center gap-4 text-[10px] text-slate-500 dark:text-slate-500 font-medium">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500" /> Available
           </span>
@@ -102,7 +106,7 @@ export default function TacticalMap() {
       </div>
 
       {/* SVG Canvas */}
-      <div className="flex-1 relative min-h-0" onClick={() => setSelectedIncident(null)}>
+      <div className="flex-1 relative min-h-0 bg-slate-50/50 dark:bg-slate-950 transition-colors duration-300" onClick={() => setSelectedIncident(null)}>
         <svg
           viewBox="0 0 1000 700"
           className="w-full h-full"
@@ -111,7 +115,7 @@ export default function TacticalMap() {
           <defs>
             {/* Grid pattern */}
             <pattern id="tac-grid" width="50" height="50" patternUnits="userSpaceOnUse">
-              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(148,163,184,0.04)" strokeWidth="0.5" />
+              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="currentColor" className="text-slate-200 dark:text-slate-800/60" strokeWidth="0.5" />
             </pattern>
             {/* Glow filter for volunteers */}
             <filter id="node-glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -131,19 +135,18 @@ export default function TacticalMap() {
             </filter>
           </defs>
 
-          {/* Background */}
-          <rect width="1000" height="700" fill="#0b0b14" />
+          {/* Background Grid */}
           <rect width="1000" height="700" fill="url(#tac-grid)" />
 
           {/* Perimeter border */}
           <rect x="10" y="10" width="980" height="680" rx="12" fill="none"
-                stroke="rgba(99,102,241,0.08)" strokeWidth="1" strokeDasharray="8 6" />
+                stroke="currentColor" className="text-indigo-200 dark:text-indigo-500/20" strokeWidth="1.5" strokeDasharray="8 6" />
 
           {/* ─── Crowd Zones ──────────────────────────────────────── */}
           {crowdZones.map((zone) => {
             const ratio = zone.currentOccupancy / zone.capacity;
             const pct = Math.round(ratio * 100);
-            const colors = getZoneColors(ratio);
+            const colors = getZoneColors(ratio, isDarkMode);
             return (
               <g key={zone.id}>
                 {/* Zone base rectangle */}
@@ -163,7 +166,7 @@ export default function TacticalMap() {
                     x={zone.x} y={zone.y}
                     width={zone.width} height={zone.height}
                     rx="6"
-                    fill="rgba(239,68,68,0.08)"
+                    fill={isDarkMode ? 'rgba(239,68,68,0.08)' : 'rgba(239,68,68,0.05)'}
                   >
                     <animate
                       attributeName="fill-opacity"
@@ -184,7 +187,7 @@ export default function TacticalMap() {
                 {/* Capacity readout */}
                 <text
                   x={zone.x + zone.width / 2} y={zone.y + 36}
-                  textAnchor="middle" fill="rgba(148,163,184,0.6)"
+                  textAnchor="middle" fill="currentColor" className="text-slate-500 dark:text-slate-400"
                   fontSize="9" fontFamily="JetBrains Mono, monospace"
                 >
                   {zone.currentOccupancy.toLocaleString()}/{zone.capacity.toLocaleString()} ({pct}%)
@@ -195,11 +198,11 @@ export default function TacticalMap() {
                     <rect
                       x={zone.x + zone.width / 2 - 42} y={zone.y + zone.height - 26}
                       width="84" height="18" rx="4"
-                      fill="rgba(239,68,68,0.25)" stroke="#ef4444" strokeWidth="0.8"
+                      fill={isDarkMode ? 'rgba(239,68,68,0.25)' : 'rgba(239,68,68,0.15)'} stroke="#ef4444" strokeWidth="0.8"
                     />
                     <text
                       x={zone.x + zone.width / 2} y={zone.y + zone.height - 13}
-                      textAnchor="middle" fill="#fca5a5"
+                      textAnchor="middle" fill={isDarkMode ? '#fca5a5' : '#b91c1c'}
                       fontSize="8" fontWeight="800" fontFamily="Inter, sans-serif"
                       letterSpacing="1"
                     >
@@ -222,8 +225,8 @@ export default function TacticalMap() {
                   key={`route-${v.id}`}
                   x1={v.x} y1={v.y}
                   x2={inc.x} y2={inc.y}
-                  stroke="rgba(245,158,11,0.35)"
-                  strokeWidth="1.5"
+                  stroke="rgba(245,158,11,0.5)"
+                  strokeWidth="2"
                   strokeDasharray="5 4"
                 >
                   <animate
@@ -319,41 +322,41 @@ export default function TacticalMap() {
 
       {/* ─── Proximity Dispatch Panel (bottom overlay) ─────────────── */}
       {selectedIncident && (
-        <div className="absolute bottom-0 left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-t border-slate-700/50 p-4 animate-slide-up z-40">
+        <div className="absolute bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 p-4 animate-slide-up z-40 transition-colors">
           <div className="flex items-start justify-between mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <AlertTriangle
                   className={`w-4 h-4 ${
                     selectedIncident.priority === 'CRITICAL'
-                      ? 'text-red-400'
+                      ? 'text-red-500 dark:text-red-400'
                       : selectedIncident.priority === 'WARNING'
-                      ? 'text-amber-400'
-                      : 'text-indigo-400'
+                      ? 'text-amber-500 dark:text-amber-400'
+                      : 'text-indigo-500 dark:text-indigo-400'
                   }`}
                 />
                 <span
                   className={`status-badge ${
                     selectedIncident.priority === 'CRITICAL'
-                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                      ? 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30'
                       : selectedIncident.priority === 'WARNING'
-                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                      : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+                      ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30'
+                      : 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30'
                   }`}
                 >
                   {selectedIncident.priority}
                 </span>
-                <span className="text-[10px] font-mono text-slate-600">
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
                   {selectedIncident.id}
                 </span>
               </div>
-              <p className="text-sm text-slate-300 leading-snug">
+              <p className="text-sm text-slate-800 dark:text-slate-100 leading-snug">
                 {selectedIncident.description}
               </p>
             </div>
             <button
               onClick={() => setSelectedIncident(null)}
-              className="p-1 text-slate-500 hover:text-slate-300 transition-colors rounded hover:bg-slate-800/50"
+              className="p-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors rounded hover:bg-slate-100 dark:hover:bg-slate-800/50"
             >
               <X className="w-4 h-4" />
             </button>
@@ -365,34 +368,38 @@ export default function TacticalMap() {
               Nearest Available Responders
             </p>
             {nearestVolunteers.length > 0 ? (
-              <div className="flex gap-2.5">
+              <div className="space-y-2">
                 {nearestVolunteers.map((v, i) => (
                   <div
                     key={v.id}
-                    className="flex items-center gap-2.5 bg-zinc-800/70 rounded-lg px-3 py-2 border border-slate-700/40 hover:border-slate-600/60 transition-colors"
+                    className="flex items-center justify-between bg-slate-50 dark:bg-slate-950/70 rounded-lg px-3 py-2.5 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500/50 transition-colors"
                   >
-                    <div className="relative">
-                      <div className="w-9 h-9 rounded-full bg-emerald-500/15 border-2 border-emerald-500/40 flex items-center justify-center">
-                        <span className="text-xs font-extrabold text-emerald-400">
-                          {v.initials}
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-500/12 border-2 border-emerald-300 dark:border-emerald-500/35 flex items-center justify-center transition-colors">
+                          <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                            {v.initials}
+                          </span>
+                        </div>
+                        <span className="absolute -top-1 -left-1 w-4 h-4 rounded-full bg-indigo-500 dark:bg-indigo-600 flex items-center justify-center text-[8px] font-bold text-white transition-colors">
+                          {i + 1}
                         </span>
                       </div>
-                      <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-zinc-800 border border-slate-700 flex items-center justify-center text-[8px] font-bold text-slate-400">
-                        {i + 1}
-                      </span>
-                    </div>
-                    <div className="mr-1">
-                      <p className="text-xs font-semibold text-slate-200">{v.name}</p>
-                      <p className="text-[10px] text-slate-500 font-mono">
-                        {Math.round(v.distance)}m • {v.id}
-                      </p>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 transition-colors">
+                          {v.name}
+                        </p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono transition-colors">
+                          {Math.round(v.distance)}m • {v.id}
+                        </p>
+                      </div>
                     </div>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDispatch(v.id);
                       }}
-                      className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-md text-[10px] font-bold transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/20 active:scale-95"
+                      className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-md text-[10px] font-bold text-white transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/20 active:scale-95"
                     >
                       <Navigation className="w-3 h-3" />
                       DISPATCH
@@ -401,7 +408,7 @@ export default function TacticalMap() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-600 italic py-2">
+              <p className="text-xs text-slate-500 dark:text-slate-600 italic py-2">
                 No available volunteers for dispatch
               </p>
             )}
