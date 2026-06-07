@@ -81,7 +81,7 @@ Open your browser and navigate to the tactical system UI:
 For the hackathon review panel, the system is fully deployed and actively running live telemetry.
 
 - **Frontend Hosting Interface:** [https://sangam-drishti.vercel.app/]
-- **Live WebSocket Backend Engine:** [https://sangam-drishti-backend.onrender.com/]
+- **Live WebSocket Backend Engine:** [https://sangam-drishti-backend.onrender.com/] **"WebSocket background data pipeline stream only, do not open directly in browser"**
 
 ---
 *Configuration Profile: Prayagraj 2028 Mega-Crowd Protocol Enabled*
