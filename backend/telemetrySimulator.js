@@ -131,14 +131,24 @@ function tick() {
     }
   });
 
-  // 2) Fluctuate pilgrim density by random integers
+  // 2) Fluctuate pilgrim density dynamically (bound between 35% and 92%)
   crowdZones.forEach((z) => {
-    const delta = Math.floor((Math.random() - 0.42) * 2800);
+    const currentRatio = z.currentOccupancy / z.capacity;
+    
+    // Determine direction: slight natural upward bias, but force clearance if over 90%
+    let direction = Math.random() > 0.45 ? 1 : -1;
+    if (currentRatio > 0.90) direction = -1;
+    
+    // Small random variation +/- 3% to 5% per tick
+    const variationPct = 0.03 + Math.random() * 0.02;
+    const delta = Math.floor(z.capacity * variationPct * direction);
+    
     z.currentOccupancy = clamp(
       z.currentOccupancy + delta,
-      Math.floor(z.capacity * 0.08),
-      z.capacity
+      Math.floor(z.capacity * 0.35),
+      Math.floor(z.capacity * 0.92)
     );
+    
     const ratio = z.currentOccupancy / z.capacity;
     z.anomaly = ratio > 0.85;
   });
