@@ -18,17 +18,17 @@ function calculateDistance(x1, y1, x2, y2) {
 
 const PRIORITY_STYLES = {
   CRITICAL: {
-    card: 'bg-red-50 dark:bg-red-500/8 border-red-200 dark:border-red-500/25',
+    card: 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-500/30',
     badge: 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30',
     icon: 'text-red-500 dark:text-red-400',
   },
   WARNING: {
-    card: 'bg-amber-50 dark:bg-amber-500/8 border-amber-200 dark:border-amber-500/25',
+    card: 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-500/30',
     badge: 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30',
     icon: 'text-amber-500 dark:text-amber-400',
   },
   ROUTINE: {
-    card: 'bg-indigo-50 dark:bg-indigo-500/8 border-indigo-200 dark:border-indigo-500/25',
+    card: 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-500/30',
     badge: 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30',
     icon: 'text-indigo-500 dark:text-indigo-400',
   },
@@ -90,13 +90,13 @@ export default function TriagePipeline() {
             )}
             {incident.priority}
           </span>
-          <span className="text-[9px] font-mono text-slate-500 dark:text-slate-600">
+          <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400">
             {incident.id}
           </span>
         </div>
 
         {/* Description */}
-        <p className="text-[11px] text-slate-700 dark:text-slate-100 leading-relaxed mb-2 transition-colors">
+        <p className="text-[11px] text-slate-700 dark:text-white leading-relaxed mb-2 transition-colors">
           {incident.description}
         </p>
 
