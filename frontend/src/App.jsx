@@ -13,11 +13,11 @@ import Login from './components/Login';
 import { Shield, Clock, Wifi, WifiOff, Activity, Sun, Moon } from 'lucide-react';
 
 const WaveBackground = () => (
-  <div className="absolute inset-0 z-0 pointer-events-none opacity-50 dark:opacity-[0.03] overflow-hidden">
+  <div className="absolute inset-0 z-0 pointer-events-none opacity-50 dark:opacity-[0.15] overflow-hidden">
     <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-      <path d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" fill="currentColor" className="text-orange-100 dark:text-orange-900/30" />
-      <path d="M0,60 Q25,40 50,60 T100,60 L100,100 L0,100 Z" fill="currentColor" className="text-orange-200 dark:text-orange-800/30" />
-      <path d="M0,70 Q25,50 50,70 T100,70 L100,100 L0,100 Z" fill="currentColor" className="text-orange-300 dark:text-orange-700/30" />
+      <path d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" fill="currentColor" className="text-orange-100 dark:text-orange-500/20" />
+      <path d="M0,60 Q25,40 50,60 T100,60 L100,100 L0,100 Z" fill="currentColor" className="text-orange-200 dark:text-orange-600/20" />
+      <path d="M0,70 Q25,50 50,70 T100,70 L100,100 L0,100 Z" fill="currentColor" className="text-orange-300 dark:text-orange-700/25" />
     </svg>
   </div>
 );
