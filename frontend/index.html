@@ -1,18 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Event Operations Command Center — Real-time tactical dashboard for enterprise-scale incident management and proximity dispatch automation" />
+    <meta name="description" content="SangamDrishti ICCC — Real-time tactical crowd telemetry and emergency dispatch platform for Mahakumbh 2028" />
     <meta name="theme-color" content="#0a0a0f" />
-    <title>Event Ops Command Center</title>
+    <title>SangamDrishti ICCC</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      /* ── Pre-React Splash Screen ── */
+      #splash-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #020617;
+        font-family: 'Inter', system-ui, sans-serif;
+        transition: opacity 0.6s ease, visibility 0.6s ease;
+      }
+      #splash-screen.fade-out {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .splash-logo-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 120px;
+        height: 120px;
+      }
+      .splash-pulse-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2px solid rgba(234, 88, 12, 0.3);
+        animation: splash-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .splash-pulse-ring:nth-child(2) {
+        animation-delay: 0.6s;
+      }
+      .splash-pulse-ring:nth-child(3) {
+        animation-delay: 1.2s;
+      }
+      @keyframes splash-pulse {
+        0% { transform: scale(0.8); opacity: 1; }
+        100% { transform: scale(2.2); opacity: 0; }
+      }
+      .splash-title {
+        margin-top: 28px;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #f1f5f9;
+      }
+      .splash-subtitle {
+        margin-top: 6px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #64748b;
+      }
+    </style>
   </head>
-  <body class="bg-[#0a0a0f] text-white antialiased overflow-hidden">
+  <body class="bg-[#020617] text-white antialiased overflow-hidden">
+    <!-- Splash Screen (visible before React mounts) -->
+    <div id="splash-screen">
+      <div class="splash-logo-wrap">
+        <div class="splash-pulse-ring"></div>
+        <div class="splash-pulse-ring"></div>
+        <div class="splash-pulse-ring"></div>
+        <svg width="56" height="56" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative; z-index:1;">
+          <path d="M 16 4 L 24 18 L 8 18 Z" stroke="#ea580c" stroke-width="2" stroke-linejoin="round" fill="#1e1b2e" />
+          <path d="M 16 4 L 16 18" stroke="#ea580c" stroke-width="2" />
+          <path d="M 4 22 Q 10 18, 16 22 T 28 22" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" />
+          <path d="M 4 26 Q 10 22, 16 26 T 28 26" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="splash-title">SangamDrishti</div>
+      <div class="splash-subtitle">Integrated Command &amp; Control Center</div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Auto-hide splash once React's root renders content
+      const observer = new MutationObserver(() => {
+        const root = document.getElementById('root');
+        if (root && root.children.length > 0) {
+          const splash = document.getElementById('splash-screen');
+          if (splash) {
+            splash.classList.add('fade-out');
+            setTimeout(() => splash.remove(), 700);
+          }
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.getElementById('root'), { childList: true });
+    </script>
   </body>
 </html>

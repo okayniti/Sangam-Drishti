@@ -3,13 +3,14 @@
 // 2-row grid: TacticalMap + RealTimeMetrics (top), TriagePipeline + ControlPanel (bottom)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSocket } from './context/SocketContext';
 import TacticalMap from './components/TacticalMap';
 import TriagePipeline from './components/TriagePipeline';
 import RealTimeMetrics from './components/RealTimeMetrics';
 import ControlPanel from './components/ControlPanel';
 import Login from './components/Login';
+import SystemBootScreen from './components/SystemBootScreen';
 import { Shield, Clock, Wifi, WifiOff, Activity, Sun, Moon } from 'lucide-react';
 
 const WaveBackground = () => (
@@ -27,6 +28,7 @@ export default function App() {
   const [clock, setClock] = useState(new Date());
   const [activeTab, setActiveTab] = useState('overview');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isSystemReady, setIsSystemReady] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   // Strictly inject dark mode on mount
@@ -54,8 +56,18 @@ export default function App() {
   const activeIncidents = incidents.filter((i) => i.status !== 'RESOLVED').length;
   const deployedUnits = volunteers.filter((v) => v.status !== 'Available').length;
 
+  const hasData = incidents.length > 0 || volunteers.length > 0;
+
+  const handleSystemReady = useCallback(() => {
+    setIsSystemReady(true);
+  }, []);
+
   if (!isAuthenticated) {
     return <Login onLogin={() => setIsAuthenticated(true)} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />;
+  }
+
+  if (!isSystemReady) {
+    return <SystemBootScreen connected={connected} hasData={hasData} onReady={handleSystemReady} />;
   }
 
   return (
