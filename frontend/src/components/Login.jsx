@@ -209,7 +209,7 @@ export default function Login({ onLogin, isDarkMode, setIsDarkMode }) {
           {/* Bottom Demo Account Accent Container */}
           <div 
             onClick={handleDemoFill}
-            className="cursor-pointer bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800/50 text-sky-900 dark:text-sky-300 rounded-xl p-4 mt-4 transition-all hover:bg-sky-100 dark:hover:bg-sky-900/40 hover:border-sky-300 dark:hover:border-sky-700 shadow-sm flex flex-col"
+            className="cursor-pointer bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800/50 text-sky-900 dark:text-sky-300 rounded-xl p-4 mt-4 transition-all hover:bg-sky-100 dark:hover:bg-sky-900/40 hover:border-sky-300 dark:hover:border-sky-700 shadow-sm flex flex-col group"
           >
             <div className="flex items-center gap-2 mb-2">
               <Info className="w-4 h-4 text-sky-600 dark:text-sky-400" />
@@ -218,6 +218,9 @@ export default function Login({ onLogin, isDarkMode, setIsDarkMode }) {
             <div className="text-xs font-mono text-sky-700 dark:text-sky-400/80 space-y-1 ml-6">
               <div>Email: admin@sangamdrishti.in</div>
               <div>Password: Mahakumbh2028</div>
+            </div>
+            <div className="mt-3 text-[10px] font-semibold text-sky-500 dark:text-sky-400 uppercase tracking-wider text-center group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
+              👆 Tap here to auto-fill & sign in
             </div>
           </div>
           
