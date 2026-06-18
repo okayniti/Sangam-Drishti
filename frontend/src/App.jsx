@@ -78,7 +78,7 @@ export default function App() {
         <div className="flex items-center justify-between px-5 py-2.5 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="relative flex items-center justify-center">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M 16 4 L 24 18 L 8 18 Z" stroke="#ea580c" strokeWidth="2" strokeLinejoin="round" fill="#fff7ed" />
                 <path d="M 16 4 L 16 18" stroke="#ea580c" strokeWidth="2" />
                 <path d="M 4 22 Q 10 18, 16 22 T 28 22" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" />
@@ -87,13 +87,13 @@ export default function App() {
               <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-950 animate-pulse" />
             </div>
             <div className="flex flex-col justify-center">
-              <span className="text-sm font-extrabold tracking-tight text-slate-800 dark:text-white flex items-center gap-2">
-                MAHAKUMBH 2028 ICCC
+              <span className="text-lg font-extrabold tracking-tight text-slate-800 dark:text-white flex items-center gap-2">
+                SANGAMDRISHTI ICCC
                 <span className="text-[9px] font-mono font-medium text-slate-500 dark:text-slate-600 bg-slate-100 dark:bg-slate-800/50 px-1.5 py-0.5 rounded">
                   v2.0
                 </span>
               </span>
-              <p className="text-[10px] text-slate-500 dark:text-slate-600 font-mono tracking-widest uppercase">
+              <p className="text-[11px] text-slate-500 dark:text-slate-600 font-mono tracking-widest uppercase">
                 Sector-Wise Telemetry Engine
               </p>
             </div>
