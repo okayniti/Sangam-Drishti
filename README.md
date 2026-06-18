@@ -1,11 +1,12 @@
 # SangamDrishti: Mahakumbh 2028 Integrated Command & Control Center (ICCC)
 
 > **A real-time, data-driven crowd telemetry and tactical emergency personnel dispatch platform designed for the extreme operational scale of Prayagraj 2028.**
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f5579b80-e611-4f13-bcca-4a8b96749d8e" />
+
+<img width="1920" height="1080" alt="SangamDrishti Dashboard" src="https://github.com/user-attachments/assets/f5579b80-e611-4f13-bcca-4a8b96749d8e" />
 
 ---
 
-## 🚀 The Core Problem & proposed Innovative Solutions
+## 🚀 The Core Problem & Proposed Innovative Solutions
 
 Managing the largest human gathering on earth requires systems that look beyond generic CRUD applications and instead function as elite, real-time tactical engines. **SangamDrishti** provides three standout pillars built specifically for Mahakumbh operational logic:
 
@@ -23,44 +24,68 @@ A fluid Kanban matrix that breaks alerts into actionable states:
 
 ---
 
+## ✨ User Experience Flow
+
+SangamDrishti features a premium, cinematic boot sequence designed for operational immersion:
+
+1. **🔄 Splash Screen** — A branded SangamDrishti logo with animated orange pulse rings displays for 4 seconds while the app initializes.
+2. **🔐 Secure Login Gateway** — A split-screen authentication interface featuring cultural vector artwork (temple spires, flowing Sangam river currents, Kalash) on the left and a glassmorphic login card on the right.
+3. **⚡ System Boot Sequence** — After authentication, a tactical Command Center bootup panel animates through system initialization steps (verifying auth, connecting telemetry, syncing sectors, loading positions) in real-time.
+4. **📊 Live Dashboard** — The full ICCC dashboard loads only once real data is streaming — no empty zero-state screens.
+
+---
+
 ## 🔐 Demo Access
+
 When you access the platform, you will be greeted by our premium Command Center gateway. Use the following credentials to access the live dashboard:
 - **Email:** `admin@sangamdrishti.in`
 - **Password:** `Mahakumbh2028`
 
-*(You can also use the "Demo credentials" auto-fill button at the bottom of the login screen.)*
+> 💡 *You can also click the "Demo credentials" card at the bottom of the login screen to auto-fill and sign in instantly.*
 
 ---
 
 ## 🏗️ Architecture & Tech Stack
 
-SangamDrishti is constructed as a highly modular full-stack application within a mono-repo architecture. It relies on in-memory state arrays with automated ID indexing to act as an instant-bootstrap database—meaning zero external database connection strings are required for rapid hackathon review.
+SangamDrishti is constructed as a highly modular full-stack application within a mono-repo architecture. It relies on in-memory state arrays with automated ID indexing to act as an instant-bootstrap database—meaning zero external database connection strings are required for rapid review.
 
 ```text
 SangamDrishti/
-├── package.json               # Root task runner scripts (concurrently)
-├── backend/                   # 🟢 Live Telemetry & API Engine
+├── package.json                # Root task runner scripts (concurrently)
+├── backend/                    # 🟢 Live Telemetry & API Engine
 │   ├── package.json
-│   ├── server.js              # Express + Socket.io Server (Port 3001)
-│   ├── telemetrySimulator.js  # Ticks every 4s: shifts coords, fluctuates density, injects alerts
-│   └── controller.js          # REST mutation endpoints (/api/dispatch, /api/inject)
-└── frontend/                  # 🔵 Tactical User Interface
+│   ├── server.js               # Express + Socket.io Server (Port 3001)
+│   ├── telemetrySimulator.js   # Ticks every 4s: shifts coords, fluctuates density, injects alerts
+│   └── controller.js           # REST mutation endpoints (/api/dispatch, /api/inject)
+└── frontend/                   # 🔵 Tactical User Interface
     ├── package.json
-    ├── vite.config.js         # API Proxy routing
-    ├── tailwind.config.js     # Custom tactical dark theme & animations
+    ├── index.html              # Branded splash screen with pulse animation
+    ├── vite.config.js          # API Proxy routing
+    ├── tailwind.config.js      # Custom tactical dark theme & animations
     └── src/
-        ├── App.jsx            # Master layout with top navigation tabs
-        ├── context/           # SocketContext for state:sync websocket persistence
+        ├── App.jsx             # Master layout with navigation tabs & theme toggle
+        ├── context/            # SocketContext for state:sync websocket persistence
         └── components/
-            ├── TacticalMap.jsx     # SVG canvas rendering Ghats, responders, and alerts
-            ├── TriagePipeline.jsx  # 3-column Kanban matrix
-            ├── RealTimeMetrics.jsx # Live telemetry, deployment bars, and pie charts
-            └── ControlPanel.jsx    # System overrides and manual alert injection
+            ├── Login.jsx            # Split-screen auth gateway with cultural SVG art
+            ├── SystemBootScreen.jsx # Cinematic boot sequence with live data gating
+            ├── TacticalMap.jsx      # SVG canvas rendering Ghats, responders, and alerts
+            ├── TriagePipeline.jsx   # 3-column Kanban matrix
+            ├── RealTimeMetrics.jsx  # Live telemetry, deployment bars, and pie charts
+            └── ControlPanel.jsx     # System overrides and manual alert injection
 ```
 
 **Key Technologies Used:**
 - **Frontend:** Vite, React, Tailwind CSS, Recharts, Lucide Icons
 - **Backend:** Node.js, Express, Socket.io (Native WebSockets)
+
+---
+
+## 🎨 Design Features
+
+- **🌗 Light/Dark Mode Toggle** — Full dual-theme support with a high-fidelity cyber-grid tactical aesthetic in dark mode (`slate-950` blacks, glowing borders) and warm pastel orange tones in light mode.
+- **🌊 Animated Wave Background** — Subtle pastel orange SVG wave layers visible in both themes.
+- **🏛️ Cultural Vector Artwork** — Custom SVG illustrations of temple spires, prayer flags, Kalash, and Sangam river currents on the login screen.
+- **📱 Responsive Layout** — Optimized for desktop command center displays with responsive breakpoints.
 
 ---
 
@@ -71,6 +96,7 @@ Follow these steps to boot the entire integrated command center locally in secon
 **Step 1: Install Dependencies**  
 Install all packages for both the frontend and backend using our unified root script.
 ```bash
+npm install
 npm run install:all
 ```
 
@@ -88,10 +114,15 @@ Open your browser and navigate to the tactical system UI:
 
 ## 🌍 Live Global Production Deployments
 
-For the hackathon review panel, the system is fully deployed and actively running live telemetry. Frontend hosting: Vercel; Backend hosting: Render
+The system is fully deployed and actively running live telemetry.
 
-- **Frontend Hosting Interface:** [https://sangam-drishti.vercel.app/]
-- **Live WebSocket Backend Engine:** [https://sangam-drishti-backend.onrender.com/] **"WebSocket background data pipeline stream only, do not open directly in browser"**
+| Service | Platform | URL |
+|---------|----------|-----|
+| **Frontend** | Vercel | [sangam-drishti.vercel.app](https://sangam-drishti.vercel.app/) |
+| **Backend** | Render | [sangam-drishti-backend.onrender.com](https://sangam-drishti-backend.onrender.com/) |
+
+> ⚠️ *The backend URL is a WebSocket data pipeline stream — it is not designed to be opened directly in a browser.*
 
 ---
+
 *Configuration Profile: Prayagraj 2028 Mega-Crowd Protocol Enabled*
