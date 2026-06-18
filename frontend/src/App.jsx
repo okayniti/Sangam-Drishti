@@ -93,8 +93,8 @@ export default function App() {
                   v2.0
                 </span>
               </span>
-              <p className="text-[11px] text-slate-500 dark:text-slate-600 font-mono tracking-widest uppercase">
-                Sector-Wise Telemetry Engine
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono tracking-widest uppercase">
+                Mahakumbh 2028 — Sector Telemetry Engine
               </p>
             </div>
           </div>
