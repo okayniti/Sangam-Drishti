@@ -17,6 +17,7 @@ import { io } from 'socket.io-client';
 const SocketContext = createContext(null);
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const API_BASE = import.meta.env.VITE_BACKEND_URL ? `${import.meta.env.VITE_BACKEND_URL}/api` : '/api';
 
 export function SocketProvider({ children }) {
   const socketRef = useRef(null);
@@ -65,7 +66,7 @@ export function SocketProvider({ children }) {
   // ─── Action Helpers ─────────────────────────────────────────────────────
   const dispatch = useCallback(async (volunteerId, incidentId) => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/dispatch`, {
+      const res = await fetch(`${API_BASE}/dispatch`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ volunteerId, incidentId }),
@@ -79,7 +80,7 @@ export function SocketProvider({ children }) {
 
   const resolve = useCallback(async (incidentId) => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/resolve`, {
+      const res = await fetch(`${API_BASE}/resolve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ incidentId }),
@@ -93,7 +94,7 @@ export function SocketProvider({ children }) {
 
   const inject = useCallback(async (description, priority, x, y) => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/inject`, {
+      const res = await fetch(`${API_BASE}/inject`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description, priority, x, y }),
@@ -107,7 +108,7 @@ export function SocketProvider({ children }) {
 
   const togglePause = useCallback(async () => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/toggle-pause`, {
+      const res = await fetch(`${API_BASE}/toggle-pause`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
