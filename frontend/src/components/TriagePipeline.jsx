@@ -34,6 +34,101 @@ const PRIORITY_STYLES = {
   },
 };
 
+// ─── Incident Card Sub-component ──────────────────────────────────────
+const IncidentCard = ({ incident, actions, volunteers }) => {
+  const style = PRIORITY_STYLES[incident.priority] || PRIORITY_STYLES.ROUTINE;
+  const assignedVol = incident.assignedVolunteerId
+    ? volunteers.find((v) => v.id === incident.assignedVolunteerId)
+    : null;
+  const isCriticalUnassigned =
+    incident.priority === 'CRITICAL' && incident.status === 'UNASSIGNED';
+
+  return (
+    <div
+      className={`border rounded-lg p-2.5 ${style.card} ${
+        isCriticalUnassigned ? 'border-l-2 border-l-red-500 shadow-[inset_2px_0_8px_-4px_rgba(239,68,68,0.4)]' : ''
+      } transition-colors duration-300`}
+    >
+      {/* Top row: priority badge + ID */}
+      <div className="flex items-center justify-between mb-1.5">
+        <span className={`status-badge ${style.badge}`}>
+          {isCriticalUnassigned && (
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse mr-1" />
+          )}
+          {incident.priority}
+        </span>
+        <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400">
+          {incident.id}
+        </span>
+      </div>
+
+      {/* Description */}
+      <p className="text-[11px] text-slate-700 dark:text-white leading-relaxed mb-2 transition-colors">
+        {incident.description}
+      </p>
+
+      {/* Assigned volunteer (if any) */}
+      {assignedVol && (
+        <div className="flex items-center gap-1.5 mb-2 bg-white/60 dark:bg-slate-950/50 rounded px-2 py-1 transition-colors">
+          <User className="w-3 h-3 text-slate-400 dark:text-slate-500" />
+          <span className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
+            {assignedVol.name}
+          </span>
+          <span
+            className={`status-badge ml-auto ${
+              assignedVol.status === 'En Route'
+                ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400'
+                : 'bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400'
+            }`}
+          >
+            {assignedVol.status}
+          </span>
+        </div>
+      )}
+
+      {/* Footer: timestamp + actions */}
+      <div className="flex items-center justify-between">
+        <span className="text-[9px] text-slate-500 dark:text-slate-600 font-mono flex items-center gap-1">
+          <Clock className="w-2.5 h-2.5" />
+          {new Date(incident.createdAt).toLocaleTimeString('en-US', {
+            hour12: false,
+          })}
+        </span>
+        {actions}
+      </div>
+
+      {/* Resolved timestamp */}
+      {incident.resolvedAt && (
+        <div className="mt-1.5 pt-1.5 border-t border-slate-200 dark:border-slate-800 text-[9px] text-emerald-600 font-mono flex items-center gap-1 transition-colors">
+          <CheckCircle2 className="w-2.5 h-2.5" />
+          Resolved{' '}
+          {new Date(incident.resolvedAt).toLocaleTimeString('en-US', {
+            hour12: false,
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Column Component ─────────────────────────────────────────────────
+const Column = ({ icon: Icon, iconColor, title, count, children }) => (
+  <div className="bg-white/80 dark:bg-slate-900/90 flex flex-col min-h-0 transition-colors">
+    <div className="flex-shrink-0 px-3 py-2 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between transition-colors">
+      <div className="flex items-center gap-1.5">
+        <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
+        <span className="text-[10px] font-bold text-slate-700 dark:text-slate-100 uppercase tracking-wider">
+          {title}
+        </span>
+      </div>
+      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-600 bg-slate-100 dark:bg-slate-800/40 px-1.5 py-0.5 rounded transition-colors">
+        {count}
+      </span>
+    </div>
+    <div className="flex-1 overflow-y-auto p-2 space-y-1.5">{children}</div>
+  </div>
+);
+
 export default function TriagePipeline() {
   const { incidents, volunteers, dispatch, resolve } = useSocket();
   const [dispatchModal, setDispatchModal] = useState(null);
@@ -67,101 +162,6 @@ export default function TriagePipeline() {
     setDispatchModal(null);
   };
 
-  // ─── Incident Card Sub-component ──────────────────────────────────────
-  const IncidentCard = ({ incident, actions }) => {
-    const style = PRIORITY_STYLES[incident.priority] || PRIORITY_STYLES.ROUTINE;
-    const assignedVol = incident.assignedVolunteerId
-      ? volunteers.find((v) => v.id === incident.assignedVolunteerId)
-      : null;
-    const isCriticalUnassigned =
-      incident.priority === 'CRITICAL' && incident.status === 'UNASSIGNED';
-
-    return (
-      <div
-        className={`border rounded-lg p-2.5 ${style.card} ${
-          isCriticalUnassigned ? 'border-l-2 border-l-red-500 shadow-[inset_2px_0_8px_-4px_rgba(239,68,68,0.4)]' : ''
-        } transition-colors duration-300`}
-      >
-        {/* Top row: priority badge + ID */}
-        <div className="flex items-center justify-between mb-1.5">
-          <span className={`status-badge ${style.badge}`}>
-            {isCriticalUnassigned && (
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse mr-1" />
-            )}
-            {incident.priority}
-          </span>
-          <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400">
-            {incident.id}
-          </span>
-        </div>
-
-        {/* Description */}
-        <p className="text-[11px] text-slate-700 dark:text-white leading-relaxed mb-2 transition-colors">
-          {incident.description}
-        </p>
-
-        {/* Assigned volunteer (if any) */}
-        {assignedVol && (
-          <div className="flex items-center gap-1.5 mb-2 bg-white/60 dark:bg-slate-950/50 rounded px-2 py-1 transition-colors">
-            <User className="w-3 h-3 text-slate-400 dark:text-slate-500" />
-            <span className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
-              {assignedVol.name}
-            </span>
-            <span
-              className={`status-badge ml-auto ${
-                assignedVol.status === 'En Route'
-                  ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400'
-                  : 'bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400'
-              }`}
-            >
-              {assignedVol.status}
-            </span>
-          </div>
-        )}
-
-        {/* Footer: timestamp + actions */}
-        <div className="flex items-center justify-between">
-          <span className="text-[9px] text-slate-500 dark:text-slate-600 font-mono flex items-center gap-1">
-            <Clock className="w-2.5 h-2.5" />
-            {new Date(incident.createdAt).toLocaleTimeString('en-US', {
-              hour12: false,
-            })}
-          </span>
-          {actions}
-        </div>
-
-        {/* Resolved timestamp */}
-        {incident.resolvedAt && (
-          <div className="mt-1.5 pt-1.5 border-t border-slate-200 dark:border-slate-800 text-[9px] text-emerald-600 font-mono flex items-center gap-1 transition-colors">
-            <CheckCircle2 className="w-2.5 h-2.5" />
-            Resolved{' '}
-            {new Date(incident.resolvedAt).toLocaleTimeString('en-US', {
-              hour12: false,
-            })}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  // ─── Column Component ─────────────────────────────────────────────────
-  const Column = ({ icon: Icon, iconColor, title, count, children }) => (
-    <div className="bg-white/80 dark:bg-slate-900/90 flex flex-col min-h-0 transition-colors">
-      <div className="flex-shrink-0 px-3 py-2 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between transition-colors">
-        <div className="flex items-center gap-1.5">
-          <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
-          <span className="text-[10px] font-bold text-slate-700 dark:text-slate-100 uppercase tracking-wider">
-            {title}
-          </span>
-        </div>
-        <span className="text-[10px] font-mono text-slate-500 dark:text-slate-600 bg-slate-100 dark:bg-slate-800/40 px-1.5 py-0.5 rounded transition-colors">
-          {count}
-        </span>
-      </div>
-      <div className="flex-1 overflow-y-auto p-2 space-y-1.5">{children}</div>
-    </div>
-  );
-
   return (
     <div className="glass-card flex flex-col overflow-hidden relative transition-colors">
       {/* Header */}
@@ -185,6 +185,7 @@ export default function TriagePipeline() {
             <IncidentCard
               key={inc.id}
               incident={inc}
+              volunteers={volunteers}
               actions={
                 <button
                   onClick={() => setDispatchModal(inc)}
@@ -215,6 +216,7 @@ export default function TriagePipeline() {
             <IncidentCard
               key={inc.id}
               incident={inc}
+              volunteers={volunteers}
               actions={
                 <button
                   onClick={() => resolve(inc.id)}
@@ -242,7 +244,7 @@ export default function TriagePipeline() {
           count={resolved.length}
         >
           {resolved.map((inc) => (
-            <IncidentCard key={inc.id} incident={inc} actions={null} />
+            <IncidentCard key={inc.id} incident={inc} volunteers={volunteers} actions={null} />
           ))}
           {resolved.length === 0 && (
             <div className="flex flex-col items-center justify-center py-8 text-slate-400 dark:text-slate-700 transition-colors">
