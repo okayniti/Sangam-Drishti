@@ -9,9 +9,10 @@ import TacticalMap from './components/TacticalMap';
 import TriagePipeline from './components/TriagePipeline';
 import RealTimeMetrics from './components/RealTimeMetrics';
 import ControlPanel from './components/ControlPanel';
+import SituationalAdvisor from './components/SituationalAdvisor';
 import Login from './components/Login';
 import SystemBootScreen from './components/SystemBootScreen';
-import { Shield, Clock, Wifi, WifiOff, Activity, Sun, Moon } from 'lucide-react';
+import { Shield, Clock, Wifi, WifiOff, Activity, Sun, Moon, Sparkles } from 'lucide-react';
 
 const WaveBackground = () => (
   <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -189,6 +190,17 @@ export default function App() {
           >
             <span>🎛️</span> Control Panel & Settings
           </button>
+          <button
+            onClick={() => setActiveTab('advisor')}
+            className={`flex items-center gap-2 px-6 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-all border-b-2 rounded-t-lg ${
+              activeTab === 'advisor'
+                ? 'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10 border-violet-500 shadow-[0_-4px_24px_-10px_rgba(139,92,246,0.15)] dark:shadow-[0_-4px_24px_-10px_rgba(139,92,246,0.3)]'
+                : 'text-slate-500 dark:text-slate-400 border-transparent hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-900/50'
+            }`}
+          >
+            <Sparkles className={`w-3.5 h-3.5 ${activeTab === 'advisor' ? 'text-violet-500 dark:text-violet-400' : ''}`} />
+            AI Advisor
+          </button>
         </div>
       </header>
 
@@ -210,6 +222,12 @@ export default function App() {
         {activeTab === 'control' && (
           <div className="flex-1 max-w-4xl mx-auto w-full min-h-0 animate-fade-in flex flex-col pt-8">
             <ControlPanel />
+          </div>
+        )}
+
+        {activeTab === 'advisor' && (
+          <div className="flex-1 max-w-5xl mx-auto w-full min-h-0 animate-fade-in flex flex-col">
+            <SituationalAdvisor />
           </div>
         )}
       </main>
