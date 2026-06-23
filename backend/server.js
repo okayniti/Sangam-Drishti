@@ -3,11 +3,14 @@
 // Integrates REST API routes, CORS, and real-time WebSocket communication.
 // ═══════════════════════════════════════════════════════════════════════════════
 
+require('dotenv').config();
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const controller = require('./controller');
+const advisorRoute = require('./advisorRoute');
 const telemetry = require('./telemetrySimulator');
 
 const app = express();
@@ -42,6 +45,7 @@ const io = new Server(server, {
 
 // ─── REST API Routes ───────────────────────────────────────────────────────
 app.use('/api', controller);
+app.use('/api', advisorRoute);
 
 // Health check
 app.get('/health', (req, res) => {
