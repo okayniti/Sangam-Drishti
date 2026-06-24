@@ -70,20 +70,48 @@ ${relevantSOPs}
 
 Respond to the operator's query below using the live data and SOPs above. Always ground your answers in the actual current state.`;
 
-    // 3. Build conversation for Gemini
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
-    const chat = model.startChat({
+    // 3. Build conversation for Gemini using generateContent (more reliable than chat API)
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
       systemInstruction: contextualPrompt,
-      history: conversationHistory.map(msg => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.content }],
-      })),
     });
 
-    // 4. Send user message and get response
-    const result = await chat.sendMessage(message);
-    const response = result.response.text();
+    // Build content parts: previous conversation + current message
+    const contents = [];
+
+    // Add conversation history (must alternate user/model)
+    for (const msg of conversationHistory) {
+      contents.push({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }],
+      });
+    }
+
+    // Add current user message
+    contents.push({
+      role: 'user',
+      parts: [{ text: message }],
+    });
+
+    // 4. Send request with retry for rate limits
+    let response;
+    const MAX_RETRIES = 2;
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const result = await model.generateContent({ contents });
+        response = result.response.text();
+        break;
+      } catch (retryErr) {
+        const isRateLimit = retryErr.message?.includes('quota') || retryErr.message?.includes('rate') || retryErr.status === 429;
+        if (isRateLimit && attempt < MAX_RETRIES) {
+          const delay = (attempt + 1) * 3000;
+          console.log(`[ADVISOR] Rate limited, retrying in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue;
+        }
+        throw retryErr;
+      }
+    }
 
     // 5. Build context metadata for the frontend
     const activeIncidents = state.incidents.filter(i => i.status !== 'RESOLVED');
@@ -106,6 +134,11 @@ Respond to the operator's query below using the live data and SOPs above. Always
   } catch (err) {
     console.error('[ADVISOR] Gemini API error:', err);
 
+    // Log detailed field violations if present
+    if (err.errorDetails) {
+      console.error('[ADVISOR] Error details:', JSON.stringify(err.errorDetails, null, 2));
+    }
+
     // Handle specific Gemini errors
     if (err.message?.includes('API_KEY')) {
       return res.status(401).json({
@@ -113,7 +146,7 @@ Respond to the operator's query below using the live data and SOPs above. Always
         error: 'Invalid Gemini API key. Check your backend/.env configuration.',
       });
     }
-    if (err.message?.includes('quota') || err.message?.includes('rate')) {
+    if (err.message?.includes('quota') || err.message?.includes('rate') || err.status === 429) {
       return res.status(429).json({
         success: false,
         error: 'Rate limit reached. Please wait a moment before trying again.',
@@ -129,3 +162,4 @@ Respond to the operator's query below using the live data and SOPs above. Always
 });
 
 module.exports = router;
+
