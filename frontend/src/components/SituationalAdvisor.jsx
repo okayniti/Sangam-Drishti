@@ -182,8 +182,10 @@ export default function SituationalAdvisor() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [latestContext, setLatestContext] = useState(null);
+  const [cooldown, setCooldown] = useState(0);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const cooldownRef = useRef(null);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
@@ -195,6 +197,13 @@ export default function SituationalAdvisor() {
     inputRef.current?.focus();
   }, []);
 
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    cooldownRef.current = setTimeout(() => setCooldown(c => c - 1), 1000);
+    return () => clearTimeout(cooldownRef.current);
+  }, [cooldown]);
+
   // Compute live stats for the header
   const activeIncidents = incidents.filter(i => i.status !== 'RESOLVED').length;
   const criticalIncidents = incidents.filter(i => i.priority === 'CRITICAL' && i.status !== 'RESOLVED').length;
@@ -202,7 +211,7 @@ export default function SituationalAdvisor() {
 
   const sendMessage = async (text) => {
     const userMessage = text || input.trim();
-    if (!userMessage || isLoading) return;
+    if (!userMessage || isLoading || cooldown > 0) return;
 
     setInput('');
     setError(null);
@@ -211,8 +220,8 @@ export default function SituationalAdvisor() {
     const newUserMsg = { role: 'user', content: userMessage, timestamp: Date.now() };
     setMessages(prev => [...prev, newUserMsg]);
 
-    // Build conversation history for Gemini (last 10 messages for context window management)
-    const conversationHistory = [...messages, newUserMsg]
+    // Build conversation history for Gemini (exclude current message — it's sent via sendMessage)
+    const conversationHistory = messages
       .slice(-10)
       .map(m => ({ role: m.role, content: m.content }));
 
@@ -242,6 +251,7 @@ export default function SituationalAdvisor() {
         context: data.context,
       }]);
       setLatestContext(data.context);
+      setCooldown(5); // 5-second cooldown between requests
 
     } catch (err) {
       console.error('[ADVISOR] Error:', err);
@@ -466,10 +476,14 @@ export default function SituationalAdvisor() {
           </div>
           <button
             onClick={() => sendMessage()}
-            disabled={!input.trim() || isLoading}
-            className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 hover:from-violet-400 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transition-all disabled:opacity-30 disabled:shadow-none active:scale-95"
+            disabled={!input.trim() || isLoading || cooldown > 0}
+            className="flex-shrink-0 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 hover:from-violet-400 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transition-all disabled:opacity-30 disabled:shadow-none active:scale-95 px-3 min-w-[40px]"
           >
-            <Send className="w-4 h-4" />
+            {cooldown > 0 ? (
+              <span className="text-[10px] font-bold font-mono">{cooldown}s</span>
+            ) : (
+              <Send className="w-4 h-4" />
+            )}
           </button>
         </div>
         <p className="text-[8px] text-slate-400 dark:text-slate-600 mt-2 text-center font-mono">
