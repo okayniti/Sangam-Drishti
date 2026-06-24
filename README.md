@@ -1,6 +1,6 @@
 # SangamDrishti: Mahakumbh 2028 Integrated Command & Control Center (ICCC)
 
-> **A real-time, data-driven crowd telemetry and tactical emergency personnel dispatch platform designed for the extreme operational scale of Prayagraj 2028.**
+> **An AI-augmented, real-time crowd telemetry and tactical emergency personnel dispatch platform designed for the extreme operational scale of Prayagraj 2028 — powered by RAG-grounded situational intelligence.**
 
 <img width="1920" height="1080" alt="SangamDrishti Dashboard" src="https://github.com/user-attachments/assets/f5579b80-e611-4f13-bcca-4a8b96749d8e" />
 
@@ -21,6 +21,12 @@ A fluid Kanban matrix that breaks alerts into actionable states:
 - **Unassigned Triage:** High-priority items glow with a pulsing critical accent to demand immediate dispatch attention.
 - **Active Dispatch:** Live tracking of units currently En Route or On Scene.
 - **Archived/Resolved Logs:** A historical ledger of mitigated crises, providing vital accountability and post-incident review data.
+
+### 4. 🤖 DRISHTI AI — RAG-Powered Situational Intelligence Advisor
+An embedded AI advisor (powered by **Google Gemini 2.0 Flash**) that uses **Retrieval-Augmented Generation** to provide grounded, context-aware intelligence to ICCC operators. Every AI response is enriched with:
+- **Live Telemetry Data** — Real-time incident statuses, crowd zone densities, and responder deployment states are injected into every prompt.
+- **Embedded SOPs** — 6 comprehensive Mahakumbh Standard Operating Procedures (Crowd Management, Stampede Prevention, Water Rescue, Medical Emergency, Lost Persons, VIP/Akhara Procession) serve as the retrieval knowledge base.
+- **Actionable Recommendations** — The AI speaks like a seasoned incident commander, referencing actual incident IDs, zone names, and density percentages.
 
 ---
 
@@ -56,7 +62,9 @@ SangamDrishti/
 │   ├── package.json
 │   ├── server.js               # Express + Socket.io Server (Port 3001)
 │   ├── telemetrySimulator.js   # Ticks every 4s: shifts coords, fluctuates density, injects alerts
-│   └── controller.js           # REST mutation endpoints (/api/dispatch, /api/inject)
+│   ├── controller.js           # REST mutation endpoints (/api/dispatch, /api/inject)
+│   ├── advisorRoute.js         # RAG advisor endpoint — Gemini 2.0 Flash integration
+│   └── mahakumbhSOP.js         # Embedded SOP knowledge base (6 protocol categories)
 └── frontend/                   # 🔵 Tactical User Interface
     ├── package.json
     ├── index.html              # Branded splash screen with pulse animation
@@ -66,17 +74,19 @@ SangamDrishti/
         ├── App.jsx             # Master layout with navigation tabs & theme toggle
         ├── context/            # SocketContext for state:sync websocket persistence
         └── components/
-            ├── Login.jsx            # Split-screen auth gateway with cultural SVG art
-            ├── SystemBootScreen.jsx # Cinematic boot sequence with live data gating
-            ├── TacticalMap.jsx      # SVG canvas rendering Ghats, responders, and alerts
-            ├── TriagePipeline.jsx   # 3-column Kanban matrix
-            ├── RealTimeMetrics.jsx  # Live telemetry, deployment bars, and pie charts
-            └── ControlPanel.jsx     # System overrides and manual alert injection
+            ├── Login.jsx               # Split-screen auth gateway with cultural SVG art
+            ├── SystemBootScreen.jsx    # Cinematic boot sequence with live data gating
+            ├── TacticalMap.jsx         # SVG canvas rendering Ghats, responders, and alerts
+            ├── TriagePipeline.jsx      # 3-column Kanban matrix
+            ├── RealTimeMetrics.jsx     # Live telemetry, deployment bars, and pie charts
+            ├── ControlPanel.jsx        # System overrides and manual alert injection
+            └── SituationalAdvisor.jsx  # DRISHTI AI chat panel (RAG + Gemini)
 ```
 
 **Key Technologies Used:**
 - **Frontend:** Vite, React, Tailwind CSS, Recharts, Lucide Icons
 - **Backend:** Node.js, Express, Socket.io (Native WebSockets)
+- **AI/ML:** Google Gemini 2.0 Flash, RAG (Retrieval-Augmented Generation), Embedded SOP Knowledge Base
 
 ---
 
@@ -100,13 +110,21 @@ npm install
 npm run install:all
 ```
 
-**Step 2: Boot the Systems**  
+**Step 2: Configure AI Advisor (Optional)**  
+To enable the DRISHTI AI Advisor, add your Google Gemini API key:
+```bash
+# Create backend/.env file
+echo GEMINI_API_KEY=your_key_here > backend/.env
+```
+> 💡 *Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). The dashboard works fully without it — only the AI Advisor tab requires this key.*
+
+**Step 3: Boot the Systems**  
 Launch both the Express/Socket.io backend and the Vite frontend simultaneously.
 ```bash
 npm run dev
 ```
 
-**Step 3: Access the Dashboard**  
+**Step 4: Access the Dashboard**  
 Open your browser and navigate to the tactical system UI:  
 👉 **[http://localhost:5173](http://localhost:5173)**
 
