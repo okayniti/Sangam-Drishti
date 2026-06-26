@@ -124,7 +124,7 @@ Launch both the Express/Socket.io backend and the Vite frontend simultaneously.
 npm run dev
 ```
 
-**Step 4: Access the Dashboard**  
+**Step 4: To access the Dashboard**  
 Open your browser and navigate to the tactical system UI:  
 👉 **[http://localhost:5173](http://localhost:5173)**
 
