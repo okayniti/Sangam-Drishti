@@ -249,9 +249,10 @@ export default function SituationalAdvisor() {
         content: data.response,
         timestamp: Date.now(),
         context: data.context,
+        engine: data.engine || 'gemini',
       }]);
       setLatestContext(data.context);
-      setCooldown(5); // 5-second cooldown between requests
+      setCooldown(3); // 3-second cooldown between requests
 
     } catch (err) {
       console.error('[ADVISOR] Error:', err);
@@ -410,11 +411,20 @@ export default function SituationalAdvisor() {
                 </div>
               )}
 
-              {/* Timestamp */}
-              <div className={`mt-2 text-[8px] font-mono ${
+              {/* Timestamp + engine indicator */}
+              <div className={`mt-2 flex items-center gap-2 text-[8px] font-mono ${
                 msg.role === 'user' ? 'text-white/60' : 'text-slate-400 dark:text-slate-600'
               }`}>
                 {new Date(msg.timestamp).toLocaleTimeString('en-US', { hour12: false })}
+                {msg.engine && (
+                  <span className={`px-1.5 py-0.5 rounded text-[7px] font-bold uppercase ${
+                    msg.engine === 'gemini'
+                      ? 'bg-indigo-100 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400'
+                      : 'bg-emerald-100 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+                  }`}>
+                    {msg.engine === 'gemini' ? '✨ Gemini' : '⚡ Live Analysis'}
+                  </span>
+                )}
               </div>
 
               {/* Context badge for AI responses */}
