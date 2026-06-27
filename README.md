@@ -22,10 +22,11 @@ A fluid Kanban matrix that breaks alerts into actionable states:
 - **Active Dispatch:** Live tracking of units currently En Route or On Scene.
 - **Archived/Resolved Logs:** A historical ledger of mitigated crises, providing vital accountability and post-incident review data.
 
-### 4. 🤖 DRISHTI AI — RAG-Powered Situational Intelligence Advisor
-An embedded AI advisor (powered by **Google Gemini 2.0 Flash**) that uses **Retrieval-Augmented Generation** to provide grounded, context-aware intelligence to ICCC operators. Every AI response is enriched with:
-- **Live Telemetry Data** — Real-time incident statuses, crowd zone densities, and responder deployment states are injected into every prompt.
-- **Embedded SOPs** — 6 comprehensive Mahakumbh Standard Operating Procedures (Crowd Management, Stampede Prevention, Water Rescue, Medical Emergency, Lost Persons, VIP/Akhara Procession) serve as the retrieval knowledge base.
+### 4. 🤖 DRISHTI AI — Dual-Engine Situational Intelligence Advisor
+An embedded AI advisor that provides grounded, context-aware intelligence to ICCC operators using a **dual-engine architecture**:
+- **✨ Gemini Engine** — When a Google Gemini API key is configured, responses are powered by **Gemini 2.0 Flash** with full RAG (Retrieval-Augmented Generation), injecting live telemetry + SOPs into every prompt.
+- **⚡ Offline Analysis Engine** — When Gemini is unavailable (no key, rate limit, or quota), the system **seamlessly falls back** to a rule-based analysis engine that reads live telemetry directly and generates contextual, SOP-grounded responses. **No API key required — the demo always works.**
+- **Embedded SOPs** — 6 comprehensive Mahakumbh Standard Operating Procedures (Crowd Management, Stampede Prevention, Water Rescue, Medical Emergency, Lost Persons, VIP/Akhara Procession) serve as the knowledge base.
 - **Actionable Recommendations** — The AI speaks like a seasoned incident commander, referencing actual incident IDs, zone names, and density percentages.
 
 ---
@@ -86,7 +87,7 @@ SangamDrishti/
 **Key Technologies Used:**
 - **Frontend:** Vite, React, Tailwind CSS, Recharts, Lucide Icons
 - **Backend:** Node.js, Express, Socket.io (Native WebSockets)
-- **AI/ML:** Google Gemini 2.0 Flash, RAG (Retrieval-Augmented Generation), Embedded SOP Knowledge Base
+- **AI/ML:** Google Gemini 2.0 Flash (optional), RAG (Retrieval-Augmented Generation), Rule-Based Offline Analysis Engine, Embedded SOP Knowledge Base
 
 ---
 
@@ -111,12 +112,12 @@ npm run install:all
 ```
 
 **Step 2: Configure AI Advisor (Optional)**  
-To enable the DRISHTI AI Advisor, add your Google Gemini API key:
+To enable Gemini-powered AI responses, add your Google Gemini API key:
 ```bash
 # Create backend/.env file
 echo GEMINI_API_KEY=your_key_here > backend/.env
 ```
-> 💡 *Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). The dashboard works fully without it — only the AI Advisor tab requires this key.*
+> 💡 *Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). **This is optional** — the AI Advisor works fully without it using the built-in offline analysis engine.*
 
 **Step 3: Boot the Systems**  
 Launch both the Express/Socket.io backend and the Vite frontend simultaneously.
